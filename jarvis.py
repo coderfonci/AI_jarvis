@@ -1,86 +1,90 @@
-//hey I'm sargent ramzi. and I maked this small AI project for beginner student's. this project name is JARVIS.
+//hey I'm sargent ramzi. and I maked this small AI project for beginner student's. this project name is JARVIS. 
 
 # Import the required module for text  
 # to speech conversion
+import pyttsx3
+#import speech_recognition as sr
+import datetime
+import wikipedia #pip install wikipedia
+import webbrowser
+import os
 
-import pyttsx3    
-import webbrowser    // webbrowser module is a convenient web browser controller. 
-import speech_recognition as sr
 
-# init function to get an engine instance for the speech synthesis 
+
 engine = pyttsx3.init()
 rate = engine.getProperty('rate')
-engine.setProperty('rate', 178)
+engine.setProperty('rate', rate-35)
 
-#print=sg.Print
-name = input("enter your name---> ")
 
-def speak(audio): 
-    engine.say(audio) 
-    engine.runAndWait() 
+name = input('Enter your name: ')
 
-def takeCommand():
-      
-    r = sr.Recognizer()
-      
-    with sr.Microphone() as source:
-        print ('\U0001F600')
-        print("Listening...") 
-        r.energy_threshold = 500
-        r.pause_threshold = 0.7
-        r.non_speaking_duration = 0.2        
-        audio = r.listen(source)
-    
-    try: 
-        print("Recognizing...")     
-        query = r.recognize_google(audio, language ='en-in') 
-        print(f"User said: {query}\n") 
-    
-    except Exception as e: 
-        print(e)
-        #print("Unable to Recognizing your voice.")
-        #speak("Sorry, I didn't get that.")
-        return "None"
 
-    return query 
+def speak(audio):
+    engine.say(audio)
+    engine.runAndWait()
 
-if __name__ == '__main__': 
-    query=takeCommand().lower()
-    while True : 
-        query=takeCommand().lower()
-        if 'program' in query : 
-            print('in')
-            speak('i am online')
-            while True:
-                query=takeCommand().lower()
-                if 'help'in query : 
-                    speak('ok what a question.')
-                    print ('\U0001F607')
-                    while True:
-                        r = sr.Recognizer()
-                        with sr.Microphone() as source:
-                            print ('\U0001F600')
-                            print("Listening...") 
-                            r.energy_threshold = 500
-                            r.pause_threshold = 0.7
-                            r.non_speaking_duration = 0.2        
-                            audio = r.listen(source)
-    
-                        try: 
-                            print("Recognizing...")     
-                            find1 = r.recognize_google(audio, language ='en-in') 
-                            #print(f"User said: {query}\n") 
-                            webbrowser.open(f'https://www.google.com/search?q={find1}')
-                            speak(f'i got it {find1}')   
-            
-                        except Exception as e: 
-                            print(e)
-                        if 'stop' in find1:
-                            speak('i got it lets go back')
-                            break    
-                if 'sleep' in query : 
-                    speak('i got it\n ok i am going to sleep')
-                    break
-            if 'bye' in query: 
-                print(f'ok bye {name}')
-                break
+
+#def self_intro():
+#speak(f'hello{name}, i am a robot. and i can help you for a your better life.......')
+speak(f'hallo my name is robot ')
+def wishMe(name):
+    hour = int(datetime.datetime.now().hour)
+    if hour>=0 and hour<12:
+        speak(f"Good Morning!{name}")
+
+    elif hour>=12 and hour<18:
+        speak(f"Good Afternoon!{name}")   
+
+    else:
+        speak(f"Good Evening!{name}")  
+
+    #engine.say(. Please tell me how may I help you")       
+
+
+def user(name):
+    #name = input("Enter your name: ")
+    #input(f'enter any key for continue: {name}')
+    speak(f'how was your day to day!{name}') 
+    resp = input("good, fine, okay:" )
+    for i in ["good","fine","okay"]:
+        if i in resp:
+            speak(f"That's good to know, {name}.")
+            print(f"That's good to know, {name}.")
+
+def finder():
+    find = input('copy and paste\n*open youtube\n*open google:  ')
+    return find
+
+
+if __name__ == "__main__": 
+    #self_intro()
+    while True:
+        wishMe(name)
+        user(name)
+        #engine.runAndWait()
+        while True: 
+            find = finder().lower()
+            if 'open youtube' in find: 
+                x = 0
+                while True:
+                    hey = x = x +1
+                    serach = input(f"{hey}->serach youtube: ")
+                    find = webbrowser.open_new_tab(f"https://www.youtube.com/results?search_query={serach}")
+                    #webbrowser.open(find)
+                    quit = input("quit for type-> q : ")
+                    if quit=="q": 
+                        break
+            elif 'google' in find:
+                x =0
+                while True:
+                    hey = x = x + 1
+                    find = input(f"{hey}->serach Google or type of url: ")
+                    webbrowser.open_new_tab(find)
+                    quit = input('quit for type-> q : ')
+                    if quit == "q":
+                        break    
+            elif 'stackoverflow' in find:
+                webbrowser.open_new_tab("stackoverflow.com")
+            elif 'time' in find:
+                strTime = datetime.datetime.now().strftime("%H:%M:%S")    
+                speak(f"Sir, the time is {strTime}")
